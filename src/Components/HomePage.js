@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../App.css"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function HomePage() {
@@ -36,15 +36,7 @@ function HomePage() {
         
 }
 
-const handleEdit = (id)=>{
-    console.log(id);
-    axios.post(`http://localhost:5000/editUser/${id}`)
-    .then((res)=>{
-        console.log(res)
-}).catch((err)=>{
-    console.log(err)
-})
-}
+
 
     return (
         <div className="homepage">
@@ -84,7 +76,7 @@ const handleEdit = (id)=>{
                                 <td>{i.availability}</td>
                                 <td>{i.resumeURL}</td>
                                 <td>
-                                    <button className="btn btn-success mx-2 my-1" onClick={()=>handleEdit(i._id)}  >Edit</button>
+                                    <Link to = {`/Edit/${i._id}`} className="btn btn-success mx-2 my-1" > Edit </Link>
                                     <button className="btn btn-danger mx-2 my-1"  onClick={()=>handleDelete(i._id)}>Delete</button>
                                 </td>
                             </tr>

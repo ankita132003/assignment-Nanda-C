@@ -4,6 +4,7 @@ import {
 } from "react-router-dom";
 import Register from "../src/Components/Register";
 import HomePage from "../src/Components/HomePage";
+import Edit from "../src/Components/Edit"
 const router = createBrowserRouter([
     {
         path: "/",
@@ -13,5 +14,10 @@ const router = createBrowserRouter([
         path: "/HomePage",
         element: <HomePage/>,
       },
+      {
+        path: '/Edit/:id',
+        element: <Edit/>,
+      }
+
 ]);
 export default router;
