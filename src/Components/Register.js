@@ -1,41 +1,76 @@
 import React, { useState } from 'react';
 import '../App.css';
-// import axios from "axios";
+import axios from "axios";
+import {useNavigate} from 'react-router-dom'
 
 function Register() {
 
+  let navigate = useNavigate(); 
+  
+  const [image, setImage] = useState("");
+  const [url, setUrl] = useState("");
+   const uploadImage = () => {
+    const data = new FormData();
+    const cloudName = "dkbce8o4g";
+  
+    data.append("file", image);
+    data.append("upload_preset", "iorzdtav"); // set up your upload_preset on cloudinary.
+  
+    return axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, data, {
+      onUploadProgress: ProgressEvent => {
+        //track your progress here
+        console.log(ProgressEvent.loaded / ProgressEvent.total * 100);
+      }
+    }).then((res) => {
+      console.log(res.data.secure_url);
+      setUrl(res.data.secure_url)
+      console.log(url)
+      return res.data.secure_url;
+    }).catch(console.log);
+  }
+
+
+
+
+
     const [user, setUser] = useState({
-        name:"",
+      fullName:"",
         email: "",
         company:"",
         position:"",
-        contact:"",
-        profile:"",
-        expertise:"",
-        availibility:"",
-        file:""
+        phoneNumber:"",
+        linkedInProfile:"",
+        areasOfExpertise:"",
+        experience:"",
+        availability:"",
+        resumeURL:""
     })
 
+   
+
+   
     const handleChange=(e)=>{
         const {name, value} = e.target
         setUser({
             ...user, 
             [name]: value
         })
+        
     }
 
-    const handleRegister=()=>{
-        const { email, contact } = user;
-      if(email && contact){
-        alert("already");
-        // axios.post("http://localhost:5000/register", user)
-      }else{
-        alert("enter")
-      }
-     
-    }
+    
 
-  //  console.log(user);
+    const handleRegister=(e)=>{
+      e.preventDefault();
+      user.resumeURL = url
+      console.log(user)
+        axios.post("http://localhost:5000/register", user)
+        .then(res=>{
+            console.log(res)
+            // navigate('/HomePage');
+        })
+    }
+   
   return (
 
     <div className="container ">
@@ -46,10 +81,10 @@ function Register() {
           <div className="card-body">
             <h2 className="card-title app">Registeration Form</h2>
             <p className="card-text">
-              <form className="row g-3">
+              <form method ="post" className="row g-3">
               <div className="col-md-12">
-                  <label htmlFor="name" className="form-label" >Full Name</label>
-                  <input type="text" className="form-control" id="name" name="name" value={user.name} onChange={handleChange} />
+                  <label htmlFor="fullName" className="form-label" >Full Name</label>
+                  <input type="text" className="form-control" id="fullName" name="fullName" value={user.fullName} onChange={handleChange} />
                 </div>
                 <div className="col-md-12">
                   <label htmlFor="email" className="form-label">Email</label>
@@ -64,34 +99,42 @@ function Register() {
                   <input type="text" className="form-control" id="position" name="position" value={user.position} onChange={handleChange} />
                 </div>
                 <div className="col-12">
-                  <label htmlFor="contact" className="form-label">Phone no.</label>
-                  <input type="text" className="form-control" id="contact" name="phone" value={user.phone} onChange={handleChange} />
+                  <label htmlFor="phoneNumber" className="form-label">Phone no.</label>
+                  <input type="text" className="form-control" id="phoneNumber" name="phoneNumber" value={user.phoneNumber} onChange={handleChange} />
                 </div>
                 <div className="col-12">
-                  <label htmlFor="profile" className="form-label">linkedInProfile</label>
-                  <input type="text" className="form-control" id="profile"name="profile" value={user.profile} onChange={handleChange} />
+                  <label htmlFor="linkedInProfile" className="form-label">linkedInProfile</label>
+                  <input type="text" className="form-control" id="linkedInProfile"name="linkedInProfile" value={user.linkedInProfile} onChange={handleChange} />
                 </div>
                 <div className="col-md-12">
-                  <label htmlFor="areaOfExpertise" className="form-label">areaOfExpertise</label>
-                  <input type="text" className="form-control" id="areaOfExpertise" name="expertise" value={user.expertise} onChange={handleChange} />
+                  <label htmlFor="areasOfExpertise" className="form-label">areasOfExpertise</label>
+                  <input type="text" className="form-control" id="areasOfExpertise" name="areasOfExpertise" value={user.areasOfExpertise} onChange={handleChange} />
                 </div>
                 <div className="col-md-6">
                   <label htmlFor="experience" className="form-label">Experience</label>
                   <input type="text" className="form-control" id="experience" name="experience" value={user.experience} onChange={handleChange} />
                 </div>
                 <div className="col-md-6">
-                  <label htmlFor="availibility" className="form-label">Availibility</label>
-                  <input type="text" className="form-control" id="availibility" name="avalibility" value={user.availibility} onChange={handleChange} />
+                  <label htmlFor="availability" className="form-label">availability</label>
+                  <input type="text" className="form-control" id="availability" name="availability" value={user.availability} onChange={handleChange} />
                 </div>
                 <div className="col-12 ">
                   
-                  <label htmlFor="file">Resume URL</label>
-                  <input className="m-4" type="file" id="file" value={user.file} name="file" multiple onChange={handleChange} />
+                  <label htmlFor="resumeURL">Resume URL</label>
+                  {/* <input className="m-4" type="file" id="resumeURL" value={user.resumeURL} name="resumeURL" multiple onChange={handleChange} />
+                   */}
+                    
+        
                 </div>
                 <div className="col-12">
                   <button type="submit" className="btn btn-primary" onClick={handleRegister} >Sign in</button>
                 </div>
               </form>
+              <input
+          type="file"
+          onChange={(e) => setImage(e.target.files[0])}
+        ></input>
+   <button  onClick={uploadImage}>upload</button>  
             </p>
           </div>
         </div>

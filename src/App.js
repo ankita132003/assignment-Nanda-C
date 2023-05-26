@@ -1,14 +1,17 @@
-
 import './App.css';
 import Register from './Components/Register';
+import HomePage from './Components/HomePage';
+import { RouterProvider } from 'react-router';
+import router from "./Router";
 
 function App() {
   return (
     <>
-    <Register/>
-    {/* <HomePage/> */}
-  </>
-    
+      <RouterProvider router={router}>
+        <Register/>
+        <HomePage/>
+      </RouterProvider>
+   </>  
   );
 }
 
